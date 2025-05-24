@@ -9,7 +9,7 @@ import re
 
 logging.basicConfig(level=logging.INFO)
 
-bot = Bot(token=API_TOKEN)
+
 dp = Dispatcher(bot, storage=MemoryStorage())
 
 class RecipeSearch(StatesGroup):
@@ -79,6 +79,25 @@ async def send_welcome(message: types.Message):
     kb.add(KeyboardButton("📦 Product XE"))
     kb.add(KeyboardButton("📓 Food Diary"))
     await message.answer("Welcome to DiabeticaBot!\nPlease choose an action:", reply_markup=kb)
+
+@dp.message_handler(commands=['help'])
+async def send_help(message: types.Message):
+    help_text = (
+        "🤖 *DiabeticaBot — your diabetes assistant*\n\n"
+        "*🍽️ 1. Find a Recipe by Ingredient*\n"
+        "Type an ingredient, e.g. `apple`, `egg`, `chicken`.\n"
+        "Get recipe suggestions with XE, protein, fat, carbs, and instructions.\n\n"
+        "*⚖️ 2. Product XE & Nutrients*\n"
+        "Type: `product, grams` (e.g. `banana, 120`)\n"
+        "Get XE, protein, fat, and carbs per portion.\n\n"
+        "*📓 3. Food Diary*\n"
+        "Use diary menu:\n"
+        "➕ Add Entry — add food\n"
+        "📋 Show Diary — view all entries\n"
+        "🗑 Clear Diary — clear your list\n\n"
+        "You can also use the buttons or type commands manually."
+    )
+    await message.answer(help_text, parse_mode='Markdown')
 
 @dp.message_handler(lambda message: message.text == "🔍 Find Recipe")
 async def ask_ingredient(message: types.Message):
